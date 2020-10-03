@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "3IoVSUCZA73iPqhC1q+oIvffJwBgZdqytRRbkHoVvrRGaRPKezY1CoOnS92bLFB+YrRTp+FzzvlwBHb3fg8DfA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\danii\\source\\repos\\blake\\Blake512\\Blake512\\Blake512.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\danii\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\danii\\.nuget\\packages\\netstandard.library\\2.0.0\\netstandard.library.2.0.0.nupkg.sha512",
+    "C:\\Users\\danii\\.nuget\\packages\\nunit\\3.12.0\\nunit.3.12.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,15 @@
+C:\Users\danii\source\repos\blake\Blake512\Blake512\bin\Debug\netcoreapp3.1\Blake512.exe
+C:\Users\danii\source\repos\blake\Blake512\Blake512\bin\Debug\netcoreapp3.1\Blake512.deps.json
+C:\Users\danii\source\repos\blake\Blake512\Blake512\bin\Debug\netcoreapp3.1\Blake512.runtimeconfig.json
+C:\Users\danii\source\repos\blake\Blake512\Blake512\bin\Debug\netcoreapp3.1\Blake512.runtimeconfig.dev.json
+C:\Users\danii\source\repos\blake\Blake512\Blake512\bin\Debug\netcoreapp3.1\Blake512.dll
+C:\Users\danii\source\repos\blake\Blake512\Blake512\bin\Debug\netcoreapp3.1\Blake512.pdb
+C:\Users\danii\source\repos\blake\Blake512\Blake512\obj\Debug\netcoreapp3.1\Blake512.csprojAssemblyReference.cache
+C:\Users\danii\source\repos\blake\Blake512\Blake512\obj\Debug\netcoreapp3.1\Blake512.AssemblyInfoInputs.cache
+C:\Users\danii\source\repos\blake\Blake512\Blake512\obj\Debug\netcoreapp3.1\Blake512.AssemblyInfo.cs
+C:\Users\danii\source\repos\blake\Blake512\Blake512\obj\Debug\netcoreapp3.1\Blake512.dll
+C:\Users\danii\source\repos\blake\Blake512\Blake512\obj\Debug\netcoreapp3.1\Blake512.pdb
+C:\Users\danii\source\repos\blake\Blake512\Blake512\obj\Debug\netcoreapp3.1\Blake512.genruntimeconfig.cache
+C:\Users\danii\source\repos\blake\Blake512\Blake512\bin\Debug\netcoreapp3.1\nunit.framework.dll
+C:\Users\danii\source\repos\blake\Blake512\Blake512\obj\Debug\netcoreapp3.1\Blake512.csproj.CoreCompileInputs.cache
+C:\Users\danii\source\repos\blake\Blake512\Blake512\obj\Debug\netcoreapp3.1\Blake512.csproj.CopyComplete
