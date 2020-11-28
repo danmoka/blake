@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
-using System.Text;
+
 
 namespace Blake512
 {
-    public sealed class Blake512 : HashAlgorithm
+    public sealed class Blake512Algorithm : HashAlgorithm
     {
         private const int _roundCount = 16;
-        private ulong[] _h = new ulong[8]; // хэш, как с вики
-        private ulong[] _s = new ulong[4]; // соль
-        private ulong _t; // счетчик
-        private int _buffLength; // длина какого буфера?
-        private bool _nullT; /* don't xor t when the block is only padding */
-        private byte[] _messageBuffer = new byte[128]; // сюда копируем значения входных байтов, с которыми работаем 
-        private ulong[] _v = new ulong[16]; // переменные, как с вики
-        private ulong[] _m = new ulong[16]; // сообщение
+        private ulong[] _h = new ulong[8];
+        private ulong[] _s = new ulong[4];
+        private ulong _t;
+        private int _buffLength;
+        private bool _nullT;
+        private byte[] _messageBuffer = new byte[128]; 
+        private ulong[] _v = new ulong[16];
+        private ulong[] _m = new ulong[16];
 
         private static readonly int[] _sigma = new int[_roundCount * 16] {
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
@@ -78,7 +77,7 @@ namespace Blake512
             0x5BE0CD19137E2179UL
         };
 
-        public Blake512()
+        public Blake512Algorithm()
         {
             HashSizeValue = 512;
             Initialize();
@@ -89,9 +88,7 @@ namespace Blake512
         /// </summary>
         public override void Initialize()
         {
-            // инициализируем h-ки
             Array.Copy(_iv, 0, _h, 0, _h.Length);
-            // очищаем соль
             Array.Clear(_s, 0, _s.Length);
             Array.Clear(_messageBuffer, 0, _messageBuffer.Length);
             _nullT = false;
@@ -99,23 +96,28 @@ namespace Blake512
             _t = 0;
         }
 
+        /// <summary>
+        /// Вычисляет хэш
+        /// </summary>
+        /// <param name="array">входные данные, для которых вычисляется хэш</param>
+        /// <param name="ibStart">начало чтения данных</param>
+        /// <param name="cbSize">количество данных, которое нужно прочитать</param>
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            // cbSize - число байтов для использования
-            int offset = ibStart; // смещение, откуда начинать обработку
-            int n = 128 - _buffLength;
-
-            if (_buffLength > 0 && cbSize >= n)
+            int offset = ibStart; // с какой позции читать байты
+            int fill = 128 - _buffLength; // размер свободного место для заполнения
+            
+            if (_buffLength > 0 && cbSize >= fill)
             {
-                // копируем входной поток с позиции offset в буфер в позицию _buffLength длины n
-                Array.Copy(array, offset, _messageBuffer, _buffLength, n);
+                Array.Copy(array, offset, _messageBuffer, _buffLength, fill);
                 _t += 1024;
                 Compress(_messageBuffer, 0);
-                offset += n;
-                cbSize -= n;
+                offset += fill;
+                cbSize -= fill;
                 _buffLength = 0;
             }
 
+            // бежим и поблочно сжимаем полученные данные
             while (cbSize >= 128)
             {
                 _t += 1024;
@@ -124,6 +126,7 @@ namespace Blake512
                 cbSize -= 128;
             }
 
+            // если что-то осталось, то запоминаем это в буфер
             if (cbSize > 0)
             {
                 Array.Copy(array, offset, _messageBuffer, _buffLength, cbSize);
@@ -135,6 +138,11 @@ namespace Blake512
             }
         }
 
+        /// <summary>
+        /// Завершает вычисление хэша
+        /// </summary>
+        /// разбирается с входными данными, добавляя padding, и вычисляет hashcore
+        /// <returns>хэш</returns>
         protected override byte[] HashFinal()
         {
             byte[] pbMsg = new byte[16];
@@ -174,11 +182,26 @@ namespace Blake512
             return pbDigest;
         }
 
+        /// <summary>
+        /// Производит логическое сложение результатов побитовых сдвигов исходного числа
+        /// </summary>
+        /// <param name="u">исходное число</param>
+        /// <param name="nBits">на сколько бит сдвиг</param>
+        /// <returns></returns>
         private static ulong Shift(ulong u, int nBits)
         {
             return ((u >> nBits) | (u << (64 - nBits)));
         }
 
+        /// <summary>
+        /// Блок вычисления
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <param name="d"></param>
+        /// <param name="r">номер раунда</param>
+        /// <param name="i">номер блока</param>
         private void G(int a, int b, int c, int d, int r, int i)
         {
             int p = (r << 4) + i;
@@ -195,12 +218,20 @@ namespace Blake512
             _v[b] = Shift(_v[b] ^ _v[c], 11);
         }
 
+        /// <summary>
+        /// Записывает обрабатываемый блок сообщения
+        /// </summary>
+        /// <param name="block">сообщение</param>
+        /// <param name="offset">смещение</param>
         private void SetMessage(byte[] block, int offset)
         {
             for (int i = 0; i < 16; ++i)
                 _m[i] = BytesToUInt64(block, offset + (i << 3));
         }
 
+        /// <summary>
+        /// Устанавливает состояние системы
+        /// </summary>
         private void SetVariables()
         {
             Array.Copy(_h, _v, 8);
@@ -213,7 +244,7 @@ namespace Blake512
             _v[14] = _c[6];
             _v[15] = _c[7];
 
-            if (!_nullT) // если сообщение состоит не только из padding
+            if (!_nullT)
             {
                 _v[12] ^= _t;
                 _v[13] ^= _t;
@@ -222,6 +253,9 @@ namespace Blake512
             }
         }
 
+        /// <summary>
+        /// Устанавливает состояние системы (после выполнения 16 серий раундов) в переменные цепочки
+        /// </summary>
         private void SetHashValues()
         {
             for (int i = 0; i < 8; ++i) 
@@ -237,6 +271,11 @@ namespace Blake512
                 _h[i + 4] ^= _s[i];
         }
 
+        /// <summary>
+        /// Устанавливает состояние системы и сообщение, и запускает серию из 16 раундов по 8 блоков вычисления
+        /// </summary>
+        /// <param name="block"></param>
+        /// <param name="offset"></param>
         private void Compress(byte[] block, int offset)
         {
             SetMessage(block, offset);

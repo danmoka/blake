@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blake512", "Blake512\Blake512.csproj", "{53896BD2-0A27-486B-A0E8-55AA10E1DB0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blake512", "Blake512\Blake512.csproj", "{53896BD2-0A27-486B-A0E8-55AA10E1DB0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlakeHashTests", "BlakeHashTests\BlakeHashTests.csproj", "{396C44AB-B921-4140-876C-6847AE69064B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{53896BD2-0A27-486B-A0E8-55AA10E1DB0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53896BD2-0A27-486B-A0E8-55AA10E1DB0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53896BD2-0A27-486B-A0E8-55AA10E1DB0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{396C44AB-B921-4140-876C-6847AE69064B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{396C44AB-B921-4140-876C-6847AE69064B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{396C44AB-B921-4140-876C-6847AE69064B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{396C44AB-B921-4140-876C-6847AE69064B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
