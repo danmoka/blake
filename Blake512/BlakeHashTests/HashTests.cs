@@ -2,39 +2,32 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Blake512;
 using System.Collections;
 using System.Linq;
+using System.Text;
 
 namespace BlakeHashTests
 {
     [TestClass]
     public class HashTests
     {
-        private BitArray _hashNIST = new BitArray(new bool[] 
+        private string _hashNIST = "1001101011";
+        private string _hashNISTBlockTest = "0110011010";
+        private string _hashNISTBinaryMatrixTest = "01011001001010101101";
+        private string _hashNISTOverlappingTemplateTest = "10111011110010110100011100101110111110000101101001";
+        private string _testString = "Это тестовая строка на русском языке!";
+        private byte[] _testData;
+        private byte[] _hash;
+
+        public HashTests()
         {
-            true, false, false, true, true, false,true, false, true, true
-        });
-        private BitArray _hashNISTBlock = new BitArray(new bool[]
-        {
-            false, true, true, false, false, true, true, false, true, false
-        });
-        private BitArray _hashNISTBinary = new BitArray(new bool[]
-            {
-                false, true, false, 
-                true, true, false, 
-                false,true, false, 
-                false, true, false, 
-                true, false, true, 
-                false, true, true, 
-                false, true
-            }); 
+            _testData = Encoding.ASCII.GetBytes(_testString);
+            var blake512 = new Blake512Algorithm();
+            _hash = blake512.ComputeHash(_testData);
+        }
 
         [TestMethod]
         public void FrequencyTest()
         {
-            var blake512 = new Blake512Algorithm();
-            var data = new byte[0];
-            var hash = blake512.ComputeHash(data);
-            var bits = new BitArray(hash);
-            var pvFreq = new FrequencyAlg().getPValue(bits);
+            var pvFreq = new FrequencyAlg().getPValue(new BitArray(_hash));
 
             Assert.IsTrue(pvFreq >= 0.01);
         }
@@ -42,11 +35,7 @@ namespace BlakeHashTests
         [TestMethod]
         public void RunsTest()
         {
-            var blake512 = new Blake512Algorithm();
-            var data = new byte[4] { 128, 128, 128, 128 };
-            var hash = blake512.ComputeHash(data);
-            var bits = new BitArray(hash);
-            var pvFreq = new RunsAlg().getPValue(bits);
+            var pvFreq = new RunsAlg().getPValue(new BitArray(_hash));
 
             Assert.IsTrue(pvFreq >= 0.01);
         }
@@ -54,11 +43,7 @@ namespace BlakeHashTests
         [TestMethod]
         public void BlocksTest()
         {
-            var blake512 = new Blake512Algorithm();
-            var data = new byte[4] { 128, 128, 128, 128 };
-            var hash = blake512.ComputeHash(data);
-            var bits = new BitArray(hash);
-            var pvFreq = new FrequencyBlockAlg(3).getPValue(bits);
+            var pvFreq = new FrequencyBlockAlg(3).getPValue(new BitArray(_hash));
 
             Assert.IsTrue(pvFreq >= 0.01);
         }
@@ -66,11 +51,7 @@ namespace BlakeHashTests
         [TestMethod]
         public void RankTest()
         {
-            var blake512 = new Blake512Algorithm();
-            var data = new byte[4] { 128, 128, 128, 128 };
-            var hash = blake512.ComputeHash(data);
-            var bits = new BitArray(hash);
-            var pvFreq = new BinaryMatrixRankAlg(3, 3).getPValue(bits);
+            var pvFreq = new BinaryMatrixRankAlg(3, 3).getPValue(new BitArray(_hash));
 
             Assert.IsTrue(pvFreq >= 0.01);
         }
@@ -78,16 +59,15 @@ namespace BlakeHashTests
         [TestMethod]
         public void OverlappingTemplateTest()
         {
-            var blake512 = new Blake512Algorithm();
-            var data = new byte[4] { 128, 128, 128, 128 };
-            var hash = blake512.ComputeHash(data);
-            var bits = new BitArray(hash);
-            var res = new BitArray(
-                "10111011110010110100011100101110111110000101101001".Select(c => c == '1').ToArray());
-            var pvFreq = new OverlappingTemplateMatchingAlg(
-                new BitArray(new bool[] { true, true, true, true}), 32).getPValue(bits);
+            var pvFreq = new OverlappingTemplateMatchingAlg(ConvertStringToBitArray("1111"), 32)
+                .getPValue(new BitArray(_hash));
 
             Assert.IsTrue(pvFreq >= 0.01);
+        }
+
+        private BitArray ConvertStringToBitArray(string str)
+        {
+            return new BitArray(str.Select(s => s == '1').ToArray());
         }
     }
 }

@@ -1,38 +1,47 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Accord.Math;
 
 namespace BlakeHashTests
 {
+    /// <summary>
+    /// Класс для проверки псевдослучайных последовательностей
+    /// Использует тест "дырок"
+    /// </summary>
     public class RunsAlg : IPValueAlg
     {
         // ошибка в описании теста (2-6): (2) написано, что НЕ запускать тест, если 
         // сумма БОЛЬШЕ, чем значение в частотном тесте
         // далее пишут пример, где показывают, что сумма меньше, и они говорят, что тест запускать не надо
+
+        /// <summary>
+        /// Метод, считающий p-value на основе количества непрерывных последовательностей одинаковых бит
+        /// </summary>
+        /// <param name="hash">Псевдослучайная последовательность</param>
+        /// <returns>p-value</returns>
         public double getPValue(BitArray hash)
         {
-            var hashLen = hash.Length;
-            double pi = 0;
+            var hashLength = hash.Length;
+            double onesProportion = 0; // доля единиц
 
             foreach (bool v in hash)
                 if (v)
-                    pi++;
+                    onesProportion++;
 
-            pi /= hashLen;
+            onesProportion /= hashLength;
 
-            if (pi - 0.5 > 2 / Math.Sqrt(10))
+            if (onesProportion - 0.5 > 2 / Math.Sqrt(10))
                 return 0;
 
-            var vObs = 1;
+            var numberOfHoles = 1;
 
             for (int i = 0; i < hash.Length - 1; i++)
-                if (hash[i] ^ hash[i + 1])
-                    vObs++;
+                if (hash[i] ^ hash[i + 1]) // если биты не совпадают, то
+                    numberOfHoles++;
 
-            var pValue = Special.Erfc(Math.Abs(vObs - 2 * hashLen * pi * (1 - pi)) /
-                (2 * Math.Sqrt(2 * hashLen) * pi * (1 - pi)));
+            // erfc - Complementary Error Function (дополнительная функция ошибок)
+            var pValue = Special.Erfc(Math.Abs(numberOfHoles - 2 * hashLength * onesProportion * (1 - onesProportion)) /
+                (2 * Math.Sqrt(2 * hashLength) * onesProportion * (1 - onesProportion)));
 
             return pValue;
         }
