@@ -12,7 +12,7 @@ namespace BlakeHashTests
     {
         private int _rows;
         private int _columns;
-        private double[] _consts = new double[]
+        private double[] _consts = new double[] // 3x3
         {
             0.2888,
             0.5776,
@@ -37,6 +37,7 @@ namespace BlakeHashTests
             var matrixSize = _rows * _columns;
             var matrixNumber = hash.Length / (matrixSize);
             var matrixs = new List<int[,]>();
+            Probabilities(_rows, _columns);
 
             // построение списка матриц из последовательности
             for (int i = 0; i < matrixNumber; i++)
@@ -117,6 +118,40 @@ namespace BlakeHashTests
             }
 
             return rank;
+        }
+
+        /// <summary>
+        /// Считает вроятности того, что матрица n на m будет иметь ранг r, где r = 0, 1, 2 ... min(n, m)
+        /// </summary>
+        /// <param name="n">Количество строк</param>
+        /// <param name="m">Количество столбцов</param>
+        private void Probabilities(int n, int m)
+        {
+            int min = Math.Min(n, m);
+
+            if (min == 3)
+            {
+                return;
+            }
+
+            double product = 1;
+
+            for (int i = 0; i <= min - 1; i++)
+                product *= ((1.0 - Math.Pow(2, i - n)) * 
+                    (1.0 - Math.Pow(2, i - m))) / 
+                    (1.0 - Math.Pow(2, i - min));
+
+            _consts[0] = Math.Pow(2, min * (n + m - min) - n * m) * product;
+            min--;
+            product = 1;
+
+            for (int i = 0; i <= min - 1; i++)
+                product *= ((1.0 - Math.Pow(2, i - n)) * 
+                    (1.0 - Math.Pow(2, i - m))) / 
+                    (1.0 - Math.Pow(2, i - min));
+
+            _consts[1] = Math.Pow(2, min * (n + m - min) - n * m) * product;
+            _consts[2] = 1 - (_consts[0] + _consts[1]);
         }
     }
 }

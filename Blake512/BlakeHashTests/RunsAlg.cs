@@ -30,7 +30,7 @@ namespace BlakeHashTests
 
             onesProportion /= hashLength;
 
-            if (onesProportion - 0.5 > 2 / Math.Sqrt(10))
+            if (onesProportion - 0.5 > 2 / Math.Sqrt(hashLength))
                 return 0;
 
             var numberOfHoles = 1;

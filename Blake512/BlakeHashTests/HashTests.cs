@@ -51,7 +51,7 @@ namespace BlakeHashTests
         [TestMethod]
         public void RankTest()
         {
-            var pvFreq = new BinaryMatrixRankAlg(3, 3).getPValue(new BitArray(_hash));
+            var pvFreq = new BinaryMatrixRankAlg(5, 5).getPValue(new BitArray(_hash));
 
             Assert.IsTrue(pvFreq >= 0.01);
         }
